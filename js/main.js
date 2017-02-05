@@ -6,16 +6,16 @@ var midisystem;
 
 // start midi system
 navigator.requestMIDIAccess && navigator.requestMIDIAccess().then(
-  function success(midiAccess) {
+  function success(midiAccess) {                
 	// Initialize MIDI system
 	midisystem = new MidiSystem(midiAccess);
-
+  
   // Create a MIDI listener
   midisystem.stateChange.attach(function () {
     console.log("created MIDI listener for", midisystem.selectedMidiInput.name);
     midisystem.selectedMidiInput.onmidimessage = onMidiMessage;
   });
-
+  
 	midisystem.init();
 	console.log("Input ", midisystem.selectedMidiInput.name);
 	console.log("Output ", midisystem.selectedMidiOutput.name);
@@ -24,7 +24,7 @@ navigator.requestMIDIAccess && navigator.requestMIDIAccess().then(
 	console.log("Error initializing MIDI!");
 	// @TODO Warn user that MIDI is not available. Stop app?
   }
-);
+); 
 
 // Handler for incoming midi messages
 function onMidiMessage(receivedEvent) {
@@ -44,14 +44,15 @@ function onMidiMessage(receivedEvent) {
 
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyAh457wLBVpJ4yUDziGB4hDsSO1JHzX13E",
-  authDomain: "webrtcandmidi-5f0dc.firebaseapp.com",
-  databaseURL: "https://webrtcandmidi-5f0dc.firebaseio.com",
-  storageBucket: "webrtcandmidi-5f0dc.appspot.com",
-  messagingSenderId: "1020618160895"
+    apiKey: "AIzaSyDW7EytZnIQCH_45G3e7UobA17XAyJ5HGE",
+    authDomain: "webrtc-6c37f.firebaseapp.com",
+    databaseURL: "https://webrtc-6c37f.firebaseio.com",
+//    storageBucket: "webrtc-6c37f.appspot.com",
+    messagingSenderId: "779896271251"
 };
 firebase.initializeApp(config);
 
+// -----------------------------------
 // Log out
 
 function logMeOut() {
@@ -64,7 +65,7 @@ function logMeOut() {
     firebase.database().ref(pathToSignaling+'/'+receiverUid + '/answer').off();
     firebase.database().ref(pathToSignaling+'/'+receiverUid+'/ice-to-offerer').off();
     firebase.database().ref(pathToSignaling+ '/' + currentUser.uid + '/ice-to-answerer').off();
-
+    
     var update = {};
     update[pathToSignaling + "/" + receiverUid]  = null;
     // Delete any offer left over
@@ -84,7 +85,7 @@ function logMeOut() {
           firebase.auth().signOut();
     })
     .catch(function (e) {console.log('Error on logout process', e);});
-  }
+  }  
 
   receiverUid = '';
   // Kill video streams and video elements.
@@ -95,7 +96,7 @@ function logMeOut() {
 
   if (localTracks) {
     localTracks.forEach(function (track) {
-      track.stop();
+      track.stop();  
     });
   }
 
@@ -112,18 +113,20 @@ function logMeOut() {
       pc2.removeStream(stream);
     });
   }
-
+  
   activedc && activedc.close();
+  
+  if (pc1 && pc1.signalingState != 'closed') {
+      pc1.close();
+  }
+   if (pc2 && pc2.signalingState != 'closed') {
+      pc2.close();
+  } 
 
-  //pc1 && pc1.close();
-  //pc2 && pc2.close();
-
-  //if (pc) {
-  //  pc.close();
-  //  pc = null;
-  //}
 }
 
+// --------------------------------
+// Hang up
 function hangUp() {
   // First take care of offer and online status
   if (currentUser) {
@@ -134,18 +137,19 @@ function hangUp() {
     firebase.database().ref(pathToSignaling+'/'+receiverUid + '/answer').off();
     firebase.database().ref(pathToSignaling+'/'+receiverUid+'/ice-to-offerer').off();
     firebase.database().ref(pathToSignaling+ '/' + currentUser.uid + '/ice-to-answerer').off();
-
+    
     var update = {};
     update[pathToSignaling + "/" + receiverUid]  = null;
     // Delete any offer left over
     firebase.database().ref().update(update)
     .then(function() {
      // set status to online
+      myStatus = 1;
       var update = {};
       update[pathToOnline + "/" + currentUser.uid +"/status"] = 1;
       firebase.database().ref().update(update);
     });
-  }
+  }  
 
   receiverUid = '';
 
@@ -157,9 +161,9 @@ function hangUp() {
   remotevideo.src = '';
   if (localTracks) {
     localTracks.forEach(function (track) {
-      track.stop();
+      track.stop();  
     });
-  }
+  } 
    // Semaphore to disable negotiation when logging out (onnegotiationneeded is triggered when removing streams)
   negotiate = false;
   if (typeof pc1 != 'undefined' && pc1.getLocalStreams) {
@@ -173,10 +177,15 @@ function hangUp() {
       pc2.removeStream(stream);
     });
   }
-
+  
   activedc && activedc.close();
+  if (pc1 && pc1.signalingState != 'closed') {
+      pc1.close();
+  }
 
-
+   if (pc2 && pc2.signalingState != 'closed') {
+      pc2.close();
+  } 
 }
 
 // Listener to log out firebase user when closing window
@@ -208,15 +217,15 @@ document.querySelector("#reset-password").addEventListener("click", function (e)
   e.preventDefault();
   var passReset = new UserPasswordReset();
   $('#login').hide();
-  passReset.render();
+  passReset.render();          
 });
 
 // Global firebase variables
-var pathToUser, currentUser, currentUserInfo,
+var pathToUser, currentUser, currentUserInfo, 
   pathToOnline = 'online';
   pathToSignaling = 'signaling';
 
-/* Detects log in */
+/* Detects log in */ 
 firebase.auth().onAuthStateChanged(function(user) {
   console.log('firebase state change: ' + JSON.stringify(user));
   if (user) {
@@ -229,11 +238,11 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     // create user account form
     var userAccountForm = new UserAccountForm($("#modals"));
-
+	
     // create user admin menu
     var userMenu = new UserMenu(userAccountForm, $("#user-menu"));
     userMenu.show();
-
+    
     // Set user to "online" status
     firebase.database().ref(pathToUser).once('value')
     .then (function (snapshot) {
@@ -241,6 +250,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	      currentUserInfo = snapshot.val();
 	      console.log("Current user (once) " + JSON.stringify(currentUserInfo));
 	       // Set online status
+         myStatus = 1; 
 	      return firebase.database().ref(pathToOnline + "/" + currentUser.uid).set({
 	        status: 1,
 	        nick: currentUserInfo.nick,
@@ -251,7 +261,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       console.log("Error in getting user info "+error);
     });
 
-    // Create listener for modifications of user info database node
+    // Create listener for modifications of user info database node  
     firebase.database().ref(pathToUser).on('value', function (snapshot) {
       if (snapshot.val()) {
         currentUserInfo = snapshot.val();
@@ -264,20 +274,21 @@ firebase.auth().onAuthStateChanged(function(user) {
     var onlineUsersModel = new userHandlingModel();
     var onlineUsersView = new userHandlingView(onlineUsersModel, $('#userlist'));
     var onlineUsersController = new userHandlingController(onlineUsersModel, onlineUsersView);
-
+    
 
 
     // Create listener for offers from someone else
-    firebase.database().ref(pathToSignaling + "/" + currentUser.uid + "/offer").on('value', offerReceived);
+    firebase.database().ref(pathToSignaling + "/" + currentUser.uid + "/offers").on('child_added', offerReceived);
+    
   } else {
     // User is logged out
 
     $("#user-menu").addClass("hidden");
-    $("#main").hide().find("*").off(); //turn off all listeners
+    $("#main").hide().find("*").off(); //turn off all listeners 
     $("#login").show('fast');
     $("#modals").find("*").off();  // turn off all modal listeners
   }
-}, function(error) { // handle errors
+}, function(error) { // handle errors 
   console.log(error);
 });
 
