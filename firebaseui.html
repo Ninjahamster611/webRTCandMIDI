@@ -41,9 +41,12 @@
         if (user) {
 
           var displayName = user.displayName;
+          var email = user.email
 
           var update = {};
+          update["name"] = displayName;
           update["nick"] = displayName;
+          update["email"] = email;
           firebase.database().ref('users/'+user.uid).update(update);
         }
       });
