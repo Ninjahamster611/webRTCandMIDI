@@ -37,6 +37,16 @@
       var ui = new firebaseui.auth.AuthUI(firebase.auth());
       // The start method will wait until the DOM is loaded.
       ui.start('#firebaseui-auth-container', uiConfig);
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+
+          var displayName = user.displayName;
+
+          var update = {};
+          update["nick"] = displayName;
+          firebase.database().ref('users/'+user.uid).update(update);
+        }
+      });
     </script>
   </head>
   <body>
