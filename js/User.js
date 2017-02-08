@@ -1,5 +1,5 @@
 // User view and controller
-  
+
 function UserMenu(form, target) {
   this._form = form;
   this._target = target;
@@ -14,22 +14,22 @@ function UserMenu(form, target) {
       <li><a href="#" id="account">My account</a></li>
      </ul>
   `);
-  
+
   _this._target.on("click", "#account", function(e) {
     console.log("clicked account");
     e.preventDefault();
     _this._form.render();
   });
-  
+
   this.show = function() {
     firebase.database().ref(pathToUser).child('nick').once('value',
       function (snapshot) {
         var htmlUI = userMenuTemplate({nick: snapshot.val()})
         _this._target.html(htmlUI);
       }
-    );  
+    );
   }
-  
+
   this.hide = function() {
     console.log("Hiding user menu")
     _this._target.empty();
@@ -40,7 +40,7 @@ function UserMenu(form, target) {
 function UserAccountForm(target) {
   var _this = this;
   this._target = target;
-  
+
   var userAccountForm = `
     <div class="modal fade" id="userAccountModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -71,13 +71,13 @@ function UserAccountForm(target) {
       </div>
     </div>
     `;
-  
+
   this._target.append(userAccountForm);
   this._target.on('submit', '#userAccountForm', function(e) {
      e.preventDefault();
      _this.submitHandler();
   });
-   
+
   this.render = function() {
     firebase.database().ref(pathToUser).once('value').then(
       function (snapshot) {
@@ -86,22 +86,22 @@ function UserAccountForm(target) {
           $("#userName").val(user.name);
           $('#userNick').val(user.nick);
         }
-        $("#userAccountModal").modal('show');  
+        $("#userAccountModal").modal('show');
       }
     );
   };
-  
+
   this.submitHandler = function() {
     console.log("submitted");
     var name =  $("#userName").val();
     var nick = $("#userNick").val();
 
-    
-    var update = {}; 
+
+    var update = {};
     $("#userAccountModal").modal('hide');
     update["name"] = name;
     update["nick"] = nick;
-    firebase.database().ref(pathToUser).update(update);   
+    firebase.database().ref(pathToUser).update(update);
   };
 }
 
@@ -136,7 +136,7 @@ function SignUp() {
         </div>
       </div>
     `;
-  this.render = function() {  
+  this.render = function() {
     $("body").append(signUpForm);
     $("#user-sign-up-form").on('submit', function (e){
       e.preventDefault();
@@ -162,12 +162,12 @@ function SignUp() {
         console.log("new user id " + user.uid);
         $("#user-sign-up").remove();
         $("#login").show('fast');
-        
-        var update = {}; 
+
+        var update = {};
 
         update["name"] = name;
         update["nick"] = nick;
-        firebase.database().ref('users/'+user.uid).update(update); 
+        firebase.database().ref('users/'+user.uid).update(update);
       },
       function failure(error) {
         bootbox.alert({
@@ -179,7 +179,7 @@ function SignUp() {
         });
       }
     );
-  };    
+  };
 }
 
 function UserPasswordReset() {
@@ -201,9 +201,9 @@ function UserPasswordReset() {
       </div>
     </div>
     `;
-  this.render = function() {  
+  this.render = function() {
     $("body").append(userResetForm);
-    
+
     $("#user-password-reset").show()
     $("#user-password-reset-form").on('submit', function (e){
       e.preventDefault();
@@ -215,7 +215,7 @@ function UserPasswordReset() {
       $("#login").show('fast');
     })
   };
-  
+
   this.submitHandler = function() {
     console.log("submitted");
     var email = $("#user-password-reset-form .email").val();
@@ -236,5 +236,5 @@ function UserPasswordReset() {
         });
       }
     );
-  };   
+  };
 }
