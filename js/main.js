@@ -41,7 +41,7 @@ function onMidiMessage(receivedEvent) {
 
 
 /*  --------FIREBASE STUFF--------- */
-/*
+
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyAh457wLBVpJ4yUDziGB4hDsSO1JHzX13E",
@@ -51,7 +51,7 @@ var config = {
   messagingSenderId: "1020618160895"
 };
 firebase.initializeApp(config);
-*/
+
 // -----------------------------------
 // Log out
 
