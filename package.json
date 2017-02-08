@@ -1,0 +1,26 @@
+{
+  "name": "webrtcandmidi",
+  "version": "1.0.0",
+  "description": "WebRTC video plus MIDI streaming",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ninjahamster611/webRTCandMIDI.git"
+  },
+  "keywords": [
+    "WebRTC",
+    "MIDI"
+  ],
+  "author": "Nicky Schardt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ninjahamster611/webRTCandMIDI/issues"
+  },
+  "homepage": "https://github.com/Ninjahamster611/webRTCandMIDI#readme",
+  "dependencies": {
+    "firebaseui": "^1.0.0"
+  }
+}

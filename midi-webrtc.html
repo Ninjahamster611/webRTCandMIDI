@@ -4,6 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WebRTC p2p data</title>
+    <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAh457wLBVpJ4yUDziGB4hDsSO1JHzX13E",
+        authDomain: "webrtcandmidi-5f0dc.firebaseapp.com",
+        databaseURL: "https://webrtcandmidi-5f0dc.firebaseio.com",
+        storageBucket: "webrtcandmidi-5f0dc.appspot.com",
+        messagingSenderId: "1020618160895"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="js/adapter.js"></script>
     <script
       src="https://code.jquery.com/jquery-1.12.4.min.js"
