@@ -50,8 +50,9 @@ var config = {
   storageBucket: "webrtcandmidi-5f0dc.appspot.com",
   messagingSenderId: "1020618160895"
 };
-firebase.initializeApp(config);
-
+//firebase.initializeApp(config);
+var firebase = require('firebase');
+var app = firebase.initializeApp(config);
 // -----------------------------------
 // Log out
 
